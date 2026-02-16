@@ -2,30 +2,127 @@
 <html>
 <head>
     <title>Registro - Curso de Inglés</title>
+
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, Helvetica, sans-serif;
+
+            background-image: url("https://images.unsplash.com/photo-1522202176988-66273c2fd55f");
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .registro-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #4facfe;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #4facfe;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #00c6ff;
+        }
+
+        .volver {
+            margin-top: 15px;
+        }
+
+        .volver a {
+            text-decoration: none;
+            color: #4facfe;
+            font-weight: bold;
+        }
+
+        .volver a:hover {
+            text-decoration: underline;
+        }
+
+        .mensaje {
+            margin-top: 10px;
+            font-size: 14px;
+            color: green;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h2>Registro de Alumno</h2>
+    <div class="registro-container">
 
-    {% if mensaje %}
-        <p>{{ mensaje }}</p>
-    {% endif %}
+        <h2>📝 Registro de Alumno</h2>
 
-    <form method="POST">
-        {% csrf_token %}
+        {% if mensaje %}
+            <p class="mensaje">{{ mensaje }}</p>
+        {% endif %}
 
-        <label>Correo:</label><br>
-        <input type="email" name="email" required><br><br>
+        <form method="POST">
+            {% csrf_token %}
 
-        <label>Contraseña:</label><br>
-        <input type="password" name="password" required><br><br>
+            <label>Correo:</label>
+            <input type="email" name="email" required>
 
-        <button type="submit">Registrarse</button>
-    </form>
+            <label>Contraseña:</label>
+            <input type="password" name="password" required>
 
-    <br>
+            <button type="submit">Registrarse</button>
+        </form>
 
-    <a href="/">Volver al Login</a>
+        <div class="volver">
+            <p>¿Ya tienes cuenta?</p>
+            <a href="/">Volver al Login</a>
+        </div>
+
+    </div>
 
 </body>
 </html>
+

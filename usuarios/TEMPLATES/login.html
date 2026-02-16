@@ -2,32 +2,130 @@
 <html>
 <head>
     <title>Login - Curso de Inglés</title>
+
+    {% load static %}
+
+    <style>
+        body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+
+        background-image: url("https://img.freepik.com/vector-gratis/fondo-plano-escuela-ingles-dibujado-mano_23-2149507611.jpg?semt=ais_user_personalization&w=740&q=80");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 15px;
+            width: 350px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #4facfe;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #4facfe;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #00c6ff;
+        }
+
+        .registro {
+            margin-top: 15px;
+        }
+
+        .registro a {
+            text-decoration: none;
+            color: #4facfe;
+            font-weight: bold;
+        }
+
+        .registro a:hover {
+            text-decoration: underline;
+        }
+
+        .mensaje {
+            margin-top: 10px;
+            color: red;
+            font-size: 14px;
+        }
+    </style>
 </head>
+
 <body>
 
-    <h2>Bienvenido al Curso Gratuito de Inglés</h2>
+    <div class="login-container">
 
-    {% if messages %}
-        {% for message in messages %}
-            <p>{{ message }}</p>
-        {% endfor %}
-    {% endif %}
+        <h2>📚 Curso Gratuito de Inglés</h2>
 
-    <form method="POST">
-        {% csrf_token %}
+        {% if messages %}
+            {% for message in messages %}
+                <p class="mensaje">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
 
-        <label>Correo:</label><br>
-        <input type="email" name="email" required><br><br>
+        <form method="POST">
+            {% csrf_token %}
 
-        <label>Contraseña:</label><br>
-        <input type="password" name="password" required><br><br>
+            <label>Correo:</label>
+            <input type="email" name="email" required>
 
-        <button type="submit">Iniciar Sesión</button>
-    </form>
+            <label>Contraseña:</label>
+            <input type="password" name="password" required>
 
-    <br>
+            <button type="submit">Iniciar Sesión</button>
+        </form>
 
-    <a href="/registro/">Registrarse</a>
+        <div class="registro">
+            <p>¿No tienes cuenta?</p>
+            <a href="/registro/">Registrarse</a>
+        </div>
+
+    </div>
 
 </body>
 </html>
