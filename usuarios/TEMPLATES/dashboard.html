@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard - Curso de Inglés</title>
+</head>
+<body>
+
+    <h2>Panel del Alumno</h2>
+
+    <p>Correo: {{ datos.email }}</p>
+    <p>Rol: {{ datos.rol }}</p>
+
+    <br>
+
+    <a href="/logout/">Cerrar Sesión</a>
+    <a href="{% url 'listar_lecciones' %}">
+    <button>Mis Lecciones</button>
+</a>
+
+
+</body>
+</html>

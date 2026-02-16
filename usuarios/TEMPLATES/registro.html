@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Registro - Curso de Inglés</title>
+</head>
+<body>
+
+    <h2>Registro de Alumno</h2>
+
+    {% if mensaje %}
+        <p>{{ mensaje }}</p>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Correo:</label><br>
+        <input type="email" name="email" required><br><br>
+
+        <label>Contraseña:</label><br>
+        <input type="password" name="password" required><br><br>
+
+        <button type="submit">Registrarse</button>
+    </form>
+
+    <br>
+
+    <a href="/">Volver al Login</a>
+
+</body>
+</html>

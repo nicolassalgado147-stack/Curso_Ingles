@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login - Curso de Inglés</title>
+</head>
+<body>
+
+    <h2>Bienvenido al Curso Gratuito de Inglés</h2>
+
+    {% if messages %}
+        {% for message in messages %}
+            <p>{{ message }}</p>
+        {% endfor %}
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <label>Correo:</label><br>
+        <input type="email" name="email" required><br><br>
+
+        <label>Contraseña:</label><br>
+        <input type="password" name="password" required><br><br>
+
+        <button type="submit">Iniciar Sesión</button>
+    </form>
+
+    <br>
+
+    <a href="/registro/">Registrarse</a>
+
+</body>
+</html>
