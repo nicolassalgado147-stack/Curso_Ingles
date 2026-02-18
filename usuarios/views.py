@@ -8,9 +8,10 @@ import os
 
 db = initialize_firebase()
 
-# ==============================
-# ✅ REGISTRO
-# ==============================
+
+# Registro de usuarios para ingresar al inicio de sesion 
+
+
 def registro_usuario(request):
     mensaje = None
 
@@ -40,9 +41,9 @@ def registro_usuario(request):
     return render(request, 'registro.html')
 
 
-# ==============================
-# ✅ DECORADOR LOGIN
-# ==============================
+
+# Erro del registro para iniciar sesion
+
 def login_required_firebase(view_func):
 
     @wraps(view_func)
@@ -57,9 +58,9 @@ def login_required_firebase(view_func):
     return _wrapped_view
 
 
-# ==============================
-# ✅ LOGIN
-# ==============================
+
+# LOGIN - inicio de sesion despues de registrarse correctamente y el logout o cerrar la sesion
+
 def iniciar_sesion(request):
 
     if 'uid' in request.session:
@@ -100,17 +101,14 @@ def iniciar_sesion(request):
     return render(request, 'login.html')
 
 
-# ==============================
-# ✅ LOGOUT
-# ==============================
 def cerrar_sesion(request):
     request.session.flush()
     return redirect('login')
 
 
-# ==============================
-# ✅ DASHBOARD
-# ==============================
+
+# Pagina principal donde el usuarios puede ver el progreso y leccion que ha tenido,tuvo o lleva a cabo
+
 @login_required_firebase
 def dashboard(request):
 
@@ -127,32 +125,12 @@ def dashboard(request):
     except Exception as e:
         messages.error(request, f"Error BD: {e}")
 
-    # Obtener lecciones del usuario
+    # Crear listas para lecciones del usuario
+    
     lecciones = []
     cursos_activos = []
     cursos_pendientes = []
     cursos_disponibles = []
-
-    try:
-        lecciones_ref = db.collection('lecciones').where('usuario_id', '==', uid).stream()
-
-        for lec in lecciones_ref:
-            data = lec.to_dict()
-            data['id'] = lec.id
-            lecciones.append(data)
-            estado = data.get('estado', 'Pendiente')
-
-            if estado == 'Activo':
-                cursos_activos.append(data)
-            elif estado == 'Pendiente':
-                cursos_pendientes.append(data)
-            
-    except Exception as e:
-        messages.error(request, f"Error al obtener lecciones: {e}")
-        lecciones = []
-        cursos_activos = []
-        cursos_pendientes = []
-        cursos_disponibles = []
 
     if request.method == 'GET' and request.GET.get('titulo') and request.GET.get('descripcion'):
         titulo = request.GET.get('titulo')

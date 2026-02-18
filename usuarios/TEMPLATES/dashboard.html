@@ -114,15 +114,11 @@
                                                 <p class="mb-1">{{ leccion.descripcion }}</p>
                                                 <small class="text-muted">Estado: {{ leccion.estado }}</small>
                                             </div>
-                                            <div>
-                                                <a href="{% url 'editar_leccion' leccion.id %}" class="btn btn-sm btn-outline-primary me-2">Editar</a>
-                                                <a href="{% url 'eliminar_leccion' leccion.id %}" class="btn btn-sm btn-outline-danger" onclick="return confirm('¿Estás seguro de eliminar esta lección?')">Eliminar</a>
-                                            </div>
                                         </div>
                                     {% endfor %}
                                 </div>
                             {% else %}
-                                <p class="text-muted">No tienes lecciones aún. Crea una nueva arriba.</p>
+                                <p class="text-muted">No tienes lecciones aún.</p>
                             {% endif %}
                         </div>
                     </div>
@@ -181,7 +177,7 @@
                         <div class="card-body">
                             <h5 class="card-title"><i class="fas fa-chart-line"></i> Tu Progreso</h5>
                             <div class="progress mb-3">
-                                <div class="progress-bar bg-success" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100">65%</div>
+                                <div class="progress-bar bg-success" role="progressbar" style="width: 100%" aria-valuenow="1" aria-valuemin="1" aria-valuemax="100">1%</div>
                             </div>
                             <p class="text-muted">Continúa aprendiendo para mejorar tu nivel de inglés.</p>
                         </div>
