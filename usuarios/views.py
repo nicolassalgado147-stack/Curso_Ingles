@@ -146,12 +146,12 @@ def dashboard(request):
 
                 })
 
-                messages.success(request, "Lección creada correctamente")
+                messages.success(request, ".")
                 return redirect('dashboard')
             except Exception as e:
-                messages.error(request, f"Error al crear lección: {e}")
+                messages.error(request, f". {e}")
         else:
-            messages.error(request, "Título y descripción son requeridos")
+            messages.error(request, "requerimientos")
 
     return render(request, 'dashboard.html', {
         'datos': datos_usuario,
