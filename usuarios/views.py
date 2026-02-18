@@ -107,8 +107,6 @@ def cerrar_sesion(request):
 
 
 
-# Pagina principal donde el usuarios puede ver el progreso y leccion que ha tenido,tuvo o lleva a cabo
-
 @login_required_firebase
 def dashboard(request):
 
@@ -125,16 +123,10 @@ def dashboard(request):
     except Exception as e:
         messages.error(request, f"Error BD: {e}")
 
-    # Crear listas para lecciones del usuario
-    
-    lecciones = []
-    cursos_activos = []
-    cursos_pendientes = []
-    cursos_disponibles = []
-
-    if request.method == 'GET' and request.GET.get('titulo') and request.GET.get('descripcion'):
-        titulo = request.GET.get('titulo')
-        descripcion = request.GET.get('descripcion')
+    # Procesar creación de nueva lección
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        descripcion = request.POST.get('descripcion')
 
         if titulo and descripcion:
             try:
@@ -143,15 +135,37 @@ def dashboard(request):
                     'descripcion': descripcion,
                     'estado': 'Pendiente',
                     'usuario_id': uid,
-
+                    'fecha_creacion': firestore.SERVER_TIMESTAMP
                 })
 
-                messages.success(request, ".")
+                messages.success(request, "Lección creada correctamente")
                 return redirect('dashboard')
             except Exception as e:
-                messages.error(request, f". {e}")
+                messages.error(request, f"Error al crear lección: {e}")
         else:
-            messages.error(request, "requerimientos")
+            messages.error(request, "Título y descripción son requeridos")
+
+    # Obtener todas las lecciones del usuario
+    lecciones = []
+    cursos_activos = []
+    cursos_pendientes = []
+    cursos_disponibles = []
+
+    try:
+        lecciones_ref = db.collection('lecciones').where('usuario_id', '==', uid).stream()
+
+        for lec in lecciones_ref:
+            data = lec.to_dict()
+            data['id'] = lec.id
+            lecciones.append(data)
+            estado = data.get('estado', 'Pendiente')
+
+            if estado == 'Activo':
+                cursos_activos.append(data)
+            elif estado == 'Pendiente':
+                cursos_pendientes.append(data)
+    except Exception as e:
+        messages.error(request, f"Error al obtener lecciones: {e}")
 
     return render(request, 'dashboard.html', {
         'datos': datos_usuario,
@@ -161,3 +175,91 @@ def dashboard(request):
         'cursos_disponibles': cursos_disponibles
     })
 
+# =========================
+# DASHBOARD + CREATE + READ
+# =========================
+@login_required_firebase
+def dashboard(request):
+
+    uid = request.session.get('uid')
+
+    # ===== CREATE =====
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        descripcion = request.POST.get('descripcion')
+
+        if titulo and descripcion:
+            db.collection('lecciones').add({
+                'titulo': titulo,
+                'descripcion': descripcion,
+                'estado': 'Pendiente',
+                'usuario_id': uid,
+                'fecha_creacion': firestore.SERVER_TIMESTAMP
+            })
+            messages.success(request, "Lección creada correctamente")
+        else:
+            messages.error(request, "Todos los campos son obligatorios")
+
+        return redirect('dashboard')
+
+    # ===== READ =====
+    lecciones_ref = db.collection('lecciones') \
+        .where('usuario_id', '==', uid) \
+        .stream()
+
+    lecciones = []
+    cursos_activos = []
+    cursos_pendientes = []
+
+    for lec in lecciones_ref:
+        data = lec.to_dict()
+        data['id'] = lec.id
+        lecciones.append(data)
+
+        if data.get('estado') == 'Activo':
+            cursos_activos.append(data)
+        else:
+            cursos_pendientes.append(data)
+
+    return render(request, 'dashboard.html', {
+        'lecciones': lecciones,
+        'cursos_activos': cursos_activos,
+        'cursos_pendientes': cursos_pendientes,
+        'cursos_disponibles': []
+    })
+
+
+# =================
+# UPDATE
+# =================
+@login_required_firebase
+def editar_leccion(request, leccion_id):
+
+    leccion_ref = db.collection('lecciones').document(leccion_id)
+
+    if request.method == 'POST':
+        leccion_ref.update({
+            'titulo': request.POST.get('titulo'),
+            'descripcion': request.POST.get('descripcion'),
+            'estado': request.POST.get('estado')
+        })
+
+        messages.success(request, "Lección actualizada")
+        return redirect('dashboard')
+
+    leccion = leccion_ref.get().to_dict()
+    leccion['id'] = leccion_id
+
+    return render(request, 'editar_leccion.html', {'leccion': leccion})
+
+
+# =================
+# DELETE
+# =================
+@login_required_firebase
+def eliminar_leccion(request, leccion_id):
+
+    db.collection('lecciones').document(leccion_id).delete()
+    messages.success(request, "Lección eliminada")
+
+    return redirect('dashboard')
